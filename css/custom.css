@@ -124,6 +124,14 @@
 
 }
 
+.navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-brand:focus {
+  color: #2d73c0;
+}
+
+.navlink:focus {
+  color: white;
+  text-decoration: none;
+}
 
 .navbar-toggle {
 	display: block;
@@ -156,6 +164,17 @@
 	float: right !important;
 	margin-right: 0px;
 }
+
+
+.navlink:hover {
+  text-decoration: none;
+  background: #003c7e;
+	color: #f5f5f5;
+	border-right: 3px solid white;
+
+}
+
+
 .panel_toolbox {
   position: relative;
   top: -35px;
