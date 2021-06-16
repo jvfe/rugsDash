@@ -183,7 +183,7 @@ rugs_locations %>%
 ```
 
 
-Row
+Row {.tabset .tabset-fade}
 -----------------------------------------------------------------------
 
 ### Top Groups by Events
