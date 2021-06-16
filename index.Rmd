@@ -1,5 +1,5 @@
 ---
-title: "R-bloggers"
+title: "R User Groups"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -12,11 +12,33 @@ output:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
-library(rvest)
 library(stringr)
 library(dplyr)
+library(lubridate)
 library(echarts4r)
+devtools::load_all()
 ```
+
+```{r read_data, include=FALSE}
+rugs_full <- read_rugs()
+rugs_cumul <- read_cumulative()
+rugs_stats <- read_summary()[[1]]
+rugs_locations <- read_summary()[[2]]
+
+mycolor <- c("#2780e3","#003636","#a9a9a9", "#91c8c8")
+```
+
+```{r process, include=FALSE, cache=TRUE}
+
+by_year <- rugs_cumul %>% 
+  mutate(year = floor_date(datecreated, "year")) %>% 
+  count(year)
+
+years <- by_year %>% 
+  pull(year) %>% 
+  length()
+```
+
 
 Sidebar {.sidebar data-width=200}
 =====================================
@@ -32,166 +54,51 @@ Home
 Row
 -------------------------------------
 
-### Contributing Blogs
+### R User Groups
 
 ```{r}
-valueBox(contributing_blogs, icon = "fa-comments", color = "white")
+valueBox(rugs_stats %>% pull(chapters), icon = "fa-users", color = "#435f9c")
 ```
 
-### Years of blogging
+### Members
 
 ```{r}
-valueBox(length(yearly_blog_count), icon = "fa-calendar", color = "white")
+valueBox(rugs_stats %>% pull(members), icon = "fa-user", color = "#0586c4")
 ```
 
-### Twitter Followers
+### Countries
 
 ```{r}
-valueBox("92000", icon = "fa-twitter", color = "white")
+valueBox(rugs_stats %>% pull(countries), icon = "fa-globe", color = "#435f9c")
 ```
 
-### Facebook Likes
+### Cities
 
 ```{r}
-valueBox("79000", icon = "fa-facebook", color = "white")
+valueBox(rugs_stats %>% pull(city), icon = "fa-map-marker", color = "#0586c4")
 ```
 
-Row {data-height=400}
+Row
 -----------------------------------------------------------------------
 
-### Timeline of Posts Per Month
+### Past Events
 
 ```{r}
-
-mycolor <- c("#2780e3","#003636","#a9a9a9", "#91c8c8")
-
-Rbloggers_df %>% 
-  filter(Year != 2005 & Year != 2006 & Year !=2007) %>%
-  group_by(Year) %>% 
-  e_charts(Month,timeline = TRUE) %>% 
-  e_area(Blog_Count) %>%
-    e_title(text = "R-Bloggers", 
-            subtext = "Timeline", 
-            sublink = "#",
-            left = "left", top = 4
-    ) %>%
-    e_y_axis(
-      splitArea = list(show = TRUE),
-      axisPointer = list(      show = FALSE, 
-                               lineStyle = list(
-                                 color = "#999999",
-                                 width = 0.75,
-                                 type = "dotted"
-                               ))
-    ) %>%
-    e_x_axis(splitArea = list(show = TRUE),
-             splitLine = list(show = TRUE),
-             axisLabel= list(rotate = 30,interval = 0)) %>%
-    e_toolbox_feature(feature = "magicType",
-                      type = list("area", "line", "bar")) %>%
-    e_toolbox_feature("restore") %>%
-    e_toolbox_feature(feature = "reset") %>%
-    e_toolbox_feature("dataView") %>%
-    e_toolbox_feature("saveAsImage") %>%
-    e_animation(duration = 1000) %>%
-    e_tooltip(trigger = "axis") %>% e_color(mycolor)
-
+valueBox(rugs_stats %>% pull(past_events), icon = "fa-calendar-minus-o", color = "#435f9c")
 ```
 
-### Chart X
-
+### Upcoming Events
 
 ```{r}
-
-mycolor <- c("#2780e3","#003636","#a9a9a9", "#91c8c8")
-  
-  yearly_df %>% e_charts(Year) %>% 
-    e_bar(serie = Count) %>% 
-    e_title(text = "R-Bloggers", 
-            subtext = "Blog count", 
-            sublink = "#",
-            left = "left", top = 4
-    ) %>%
-    e_y_axis(
-      splitArea = list(show = TRUE),
-      axisPointer = list(      show = FALSE, 
-                               lineStyle = list(
-                                 color = "#999999",
-                                 width = 0.75,
-                                 type = "dotted"
-                               ))
-    ) %>%
-    e_x_axis(splitArea = list(show = TRUE),
-             splitLine = list(show = TRUE),
-             axisLabel= list(rotate = 30,interval = 0)) %>%
-    e_toolbox_feature(feature = "magicType",
-                      type = list("area", "line", "bar")) %>%
-    e_toolbox_feature("restore") %>%
-    e_toolbox_feature(feature = "reset") %>%
-    e_toolbox_feature("dataView") %>%
-    e_toolbox_feature("saveAsImage") %>%
-    e_animation(duration = 1000) %>%
-    e_tooltip(trigger = "axis") %>% e_color(mycolor)
-# creating a combined bar-plot using ggplot2
+valueBox(rugs_stats %>% pull(upcoming_events), icon = "fa-calendar-plus-o", color = "#0586c4")
 ```
 
-Row {data-height=400}
+### Years
+
+```{r}
+valueBox(years, icon = "fa-calendar", color = "#435f9c")
+```
+
+Row
 -----------------------------------------------------------------------
-### Monthly Count of Blog Posts 2005 - 2020
 
-```{r}
-avg <- list(
-  type = "average",
-  name = "AVG",
-  title = "Average"
-)
-Rbloggers_df <- Rbloggers_df %>% filter(Year != format(Sys.Date() ,"%Y"))
-x <- factor(Rbloggers_df$Month, levels = month.name)
-monthly_blog_count <- tapply(Rbloggers_df$Blog_Count, x, FUN=sum)
-monthly_df <- data.frame(Month=names(monthly_blog_count), Count=monthly_blog_count)
-monthly_df$Month <- factor(monthly_df$Month, levels = unique(monthly_df$Month))
-
-mycolor <- c("#2780e3","#003636","#a9a9a9", "#91c8c8")
-  
-  monthly_df %>% e_charts(Month) %>% 
-    e_bar(serie = Count) %>% 
-    e_title(text = "R-Bloggers", 
-            subtext = "Blog count", 
-            sublink = "#",
-            left = "left", top = 4
-    ) %>%
-    e_y_axis(
-      splitArea = list(show = TRUE),
-      axisPointer = list(      show = FALSE, 
-                               lineStyle = list(
-                                 color = "#999999",
-                                 width = 0.75,
-                                 type = "dotted"
-                               ))
-    ) %>%
-    e_x_axis(splitArea = list(show = TRUE),
-             splitLine = list(show = TRUE),
-             axisLabel= list(rotate = 30,interval = 0)) %>%
-     e_mark_line(data = avg) %>% 
-    e_labels(show = TRUE) %>%
-    e_toolbox_feature(feature = "magicType",
-                      type = list("area", "line", "bar")) %>%
-    e_toolbox_feature("restore") %>%
-    e_toolbox_feature(feature = "reset") %>%
-    e_toolbox_feature("dataView") %>%
-    e_toolbox_feature("saveAsImage") %>%
-    e_animation(duration = 1000) %>%
-    e_tooltip(trigger = "axis") %>% e_color(mycolor)
-
-```
-
-### Top Contributors
-
-```{r}
-
-```
-
-
-```{js}
-
-```

@@ -2,11 +2,6 @@
   display: none;
 }
 
-#navbar {
-  /*background: blue;*/
-}
-
-
 .section.sidebar {
   background: #00438d;
   padding-left: 0px;
@@ -19,7 +14,7 @@
   list-style: none;
   font-family: "Source Sans"
   text-decoration: none;
-  
+
 }
 
 .sidebar-pages > p {
@@ -72,8 +67,6 @@
 	top: 15px;
 }
 
-
-
 .value-box .inner .value {
 	font-size: 40px;
 	transition: all .3s linear;
@@ -86,6 +79,10 @@
 .value-box:hover {
   border: 1px solid #047aff;
   box-shadow: 1px 1px 1px rgba(0,0,0,.32),0 2px 2px rgba(0,0,0,.15);
+}
+
+.value-box .caption {
+  font-size: 1.5em !important;
 }
 
 #contributing-blogs .inner {
@@ -124,9 +121,9 @@
 
 .navbar-header .navbar-brand {
   color: #2d73c0;
-  
+
 }
- 
+
 
 .navbar-toggle {
 	display: block;
@@ -153,7 +150,7 @@
 	margin-bottom: 0;
 	list-style: none;
 	display: flex;
-	
+
 }
 .navbar-right {
 	float: right !important;
