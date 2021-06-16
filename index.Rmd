@@ -218,6 +218,46 @@ rugs_full %>%
   )
 ```
 
+Row {data-height=800}
+-----------------------------------------------------------------------
+
+### Growth of User Groups
+
+```{r}
+rugs_cumul %>%
+  e_charts(datecreated) %>%
+  e_area(Freq, name = "Cumulative Group Count", legend = FALSE) %>%
+  e_datazoom(type = "slider") %>%
+  e_zoom(dataZoomIndex = 0,
+         start = 50,
+         end = 100) %>% 
+  e_tooltip(trigger = "axis") %>%
+  e_toolbox_feature("saveAsImage") %>% 
+  e_color("#6D98C3")
+```
+
+### Top 40 Destinations for R Users | <small> Users per Country </small>
+
+```{r}
+rugs_full %>% 
+  group_by(country) %>% 
+  summarise(users = sum(members)) %>% 
+  slice_max(users, n = 40, with_ties = FALSE) %>% 
+  mutate(country = str_wrap(country, 10)) %>% 
+  arrange(users) %>% 
+  e_charts(country) %>% 
+  e_bar(users, name = "Number of R Users", legend = FALSE) %>% 
+  e_tooltip(trigger = "axis") %>% 
+  e_x_axis(
+    type = "category",
+    boundaryGap = TRUE,
+    axisLabel = list(interval = 0, fontSize = 10)
+  ) %>% 
+  e_flip_coords() %>% 
+  e_color("red")
+```
+
+
 Row
 -----------------------------------------------------------------------
 
