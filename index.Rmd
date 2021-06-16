@@ -31,6 +31,14 @@ mycolor <- c("#2780e3","#003636","#a9a9a9", "#91c8c8")
 ```
 
 ```{r process, include=FALSE, cache=TRUE}
+location_translation <- c(
+  us_can = "US/Canada",
+  eur = "Europe",
+  latinAm = "Latin America",
+  asia = "Asia",
+  aus = "Australia",
+  afr = "Africa"
+)
 
 by_year <- rugs_cumul %>% 
   mutate(year = floor_date(datecreated, "year")) %>% 
@@ -106,6 +114,109 @@ Row
 
 ### R User Groups Across Regions
 
+```{r}
+rugs_locations %>%
+  filter(!str_detect(location, "_m")) %>% 
+  arrange(desc(value)) %>% 
+  mutate(location = recode(location, !!!location_translation)) %>%
+  e_charts(location) %>%
+  e_bar(value, legend = FALSE, name = "Number of Groups") %>%
+  e_y_axis(
+    splitArea = list(show = TRUE),
+    axisPointer = list(
+      show = FALSE,
+      lineStyle = list(
+        color = "#9978ad",
+        width = 0.75,
+        type = "dotted"
+      )
+    )
+  ) %>%
+  e_x_axis(
+    splitArea = list(show = TRUE),
+    splitLine = list(show = TRUE),
+    axisLabel = list(interval = 0)
+  ) %>%
+  e_toolbox_feature(feature = "magicType",
+                    type = list("area", "line", "bar")) %>%
+  e_toolbox_feature("restore") %>%
+  e_toolbox_feature(feature = "reset") %>%
+  e_toolbox_feature("dataView") %>%
+  e_toolbox_feature("saveAsImage") %>%
+  e_animation(duration = 1000) %>%
+  e_tooltip(trigger = "axis") %>% 
+  e_color(color = "#80bbd6") 
+```
+
+### R Users Across Regions
+
+```{r}
+rugs_locations %>%
+  filter(str_detect(location, "_m")) %>%
+  arrange(desc(value)) %>%
+  mutate(
+    location = str_remove(location, "_m"),
+    location = recode(location,!!!location_translation)
+  ) %>%
+  e_charts(location) %>%
+  e_pie(value, radius = c("20%", "70%"), name = "Number of R Users") %>%
+  e_tooltip() %>%
+  e_color(c(
+    "#4ca0c6",
+    "#34495E",
+    "#BDC3C7",
+    "#c6d6dd",
+    "#a9a9a9",
+    "#3498DB",
+    "#025376"
+  ))
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### Top Groups by Events
+
+```{r}
+rugs_full %>%
+  select(name, past_events) %>%
+  slice_max(past_events, n = 20, with_ties = FALSE) %>% 
+  arrange(desc(past_events)) %>%
+  datatable(
+    .,
+    class = 'cell-border stripe',
+    colnames = c("Name of User Group", "Events"),
+    rownames = FALSE,
+    options = list(
+      lengthMenu = c(5, 10, 20),
+      pageLength = 10,
+      scrollY = 300,
+      dom = 'ltp'
+    )
+  )
+```
+
+### Top Groups by Members
+
+```{r}
+rugs_full %>%
+  select(name, members) %>%
+  slice_max(members, n = 20, with_ties = FALSE) %>% 
+  arrange(desc(members)) %>%
+  datatable(
+    .,
+    class = 'cell-border stripe',
+    colnames = c("Name of User Group", "Members"),
+    rownames = FALSE,
+    options = list(
+      lengthMenu = c(5, 10, 20),
+      pageLength = 10,
+      scrollY = 300,
+      dom = 'ltp'
+    )
+  )
+```
 
 Row
 -----------------------------------------------------------------------
