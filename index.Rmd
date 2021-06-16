@@ -47,6 +47,11 @@ by_year <- rugs_cumul %>%
 years <- by_year %>% 
   pull(year) %>% 
   length()
+
+per_city_region <- rugs_full %>% 
+  group_by(city, region) %>% 
+  summarise(users = sum(members)) %>% 
+  ungroup()
 ```
 
 
@@ -257,6 +262,21 @@ rugs_full %>%
   e_color("red")
 ```
 
+Row {data-height=1000}
+-----------------------------------------------------------------------
+
+### Top Destionations for R Users | <small>Users per City per Region</small>
+
+```{r}
+uscan <- plot_top_destination(per_city_region, "US/Canada")
+europe <- plot_top_destination(per_city_region, "Europe")
+latinam <- plot_top_destination(per_city_region, "Latin America")
+asia <- plot_top_destination(per_city_region, "Asia")
+australia <- plot_top_destination(per_city_region, "Australia", top_n = 10)
+africa <- plot_top_destination(per_city_region, "Africa", top_n = 10)
+
+e_arrange(uscan, europe, latinam, asia, australia, africa, rows = 2, cols = 3)
+```
 
 Row
 -----------------------------------------------------------------------

@@ -171,3 +171,8 @@ table.dataTable {
   display: flex;
   justify-content: space-between;
 }
+
+.col-xs-4 > .html-widget-static-bound {
+  width: 40em !important;
+  padding: 1em !important;
+}
