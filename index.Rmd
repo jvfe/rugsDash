@@ -52,6 +52,11 @@ per_city_region <- rugs_full %>%
   group_by(city, region) %>% 
   summarise(users = sum(members)) %>% 
   ungroup()
+
+rugs_per_country <- rugs_full %>% 
+  group_by(country) %>% 
+  summarise(group = n()) %>% 
+  ungroup()
 ```
 
 
@@ -277,6 +282,46 @@ africa <- plot_top_destination(per_city_region, "Africa", top_n = 10)
 
 e_arrange(uscan, europe, latinam, asia, australia, africa, rows = 2, cols = 3)
 ```
+
+Row {data-height=500}
+-----------------------------------------------------------------------
+
+### R User Groups by Country {data-width=700}
+
+```{r}
+rugs_per_country %>%
+  e_charts(country) %>%
+  e_bar(group, name = "Number of Groups", legend = FALSE) %>%
+  e_tooltip(trigger = "axis") %>%
+  e_x_axis(
+    type = "category",
+    axisLabel = list(
+      interval = 0,
+      rotate = 55,
+      fontSize = 9
+    )
+  ) %>%
+  e_mark_line(data = list(type = "average",
+                          name = "AVG")) %>%
+  e_color("#0586c4") %>% 
+  e_datazoom(type = "slider", top = 1) %>%
+  e_zoom(dataZoomIndex = 0,
+         start = 0,
+         end = 50) %>%
+  e_datazoom(y_index = 0, type = "slider") %>%
+  e_toolbox(bottom = 1) %>% 
+  e_toolbox_feature(feature = "magicType",
+                    type = list("area", "line", "bar")) %>%
+  e_toolbox_feature("restore") %>%
+  e_toolbox_feature(feature = "reset") %>%
+  e_toolbox_feature("saveAsImage") %>%
+  e_animation(duration = 1000)
+```
+
+### Twitter {data-width=300}
+
+<a class="twitter-timeline" href="https://twitter.com/rstatstweet?ref_src=twsrc%5Etfw">Tweets by rstatstweet</a>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
 
 Row
 -----------------------------------------------------------------------
