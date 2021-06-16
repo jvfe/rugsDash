@@ -1,5 +1,5 @@
 ---
-title: "R User Groups"
+title: "R User Groups | Meetup.com"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -16,6 +16,7 @@ library(stringr)
 library(dplyr)
 library(lubridate)
 library(echarts4r)
+library(DT)
 devtools::load_all()
 ```
 
@@ -23,7 +24,8 @@ devtools::load_all()
 rugs_full <- read_rugs()
 rugs_cumul <- read_cumulative()
 rugs_stats <- read_summary()[[1]]
-rugs_locations <- read_summary()[[2]]
+rugs_locations <- read_summary()[[2]] %>% 
+  tidyr::pivot_longer(everything(), names_to = "location")
 
 mycolor <- c("#2780e3","#003636","#a9a9a9", "#91c8c8")
 ```
@@ -101,4 +103,37 @@ valueBox(years, icon = "fa-calendar", color = "#435f9c")
 
 Row
 -----------------------------------------------------------------------
+
+### R User Groups Across Regions
+
+
+Row
+-----------------------------------------------------------------------
+
+### Locate an R User Group
+
+```{r}
+rugs_full %>% 
+  arrange(desc(created)) %>% 
+  datatable(
+    .,
+    class = 'cell-border stripe',
+    caption = "Ordered by the Newest Groups",
+    extensions = "Buttons",
+    rownames = FALSE,
+    escape = FALSE,
+    filter = 'top',
+    options = list(
+      scrollY = 600,
+      lengthMenu = c(5, 10, 25, 50, 100),
+      pageLength = 10,
+      dom = '<"flex-control"lBf>tip',
+      buttons = list('copy', list(
+        extend = 'collection',
+        buttons = c('csv', 'excel'),
+        text = 'Download'
+      ))
+    )
+  )
+```
 

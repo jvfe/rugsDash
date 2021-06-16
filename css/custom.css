@@ -162,3 +162,12 @@
 	float: right;
 	min-width: 70px;
 }
+
+table.dataTable {
+  width: 100% !important;
+}
+
+.flex-control {
+  display: flex;
+  justify-content: space-between;
+}
