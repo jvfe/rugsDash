@@ -22,4 +22,5 @@ Imports:
     lubridate,
     jsonlite,
     stringr,
-    tidyr
+    tidyr,
+    vroom
