@@ -23,4 +23,8 @@ Imports:
     jsonlite,
     stringr,
     tidyr,
-    vroom
+    vroom,
+    leaflet,
+    V8,
+    geojsonio,
+    sp
