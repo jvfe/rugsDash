@@ -1,7 +1,11 @@
 read_rugs <- function() {
   rugs_csv_url <- "https://raw.githubusercontent.com/benubah/r-community-explorer/master/docs/data/rugs.csv"
 
-  vroom::vroom(rugs_csv_url)[, -1]
+  rugs_delete <- vroom::vroom("data/rugs_delete.csv")[, -1]
+
+  vroom::vroom(rugs_csv_url)[, -1] %>%
+    filter(!(name %in% rugs_delete$name))
+
 }
 
 read_summary <- function() {

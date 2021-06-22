@@ -79,25 +79,25 @@ Row
 ### R User Groups
 
 ```{r}
-valueBox(rugs_stats %>% pull(chapters), icon = "fa-users", color = "#435f9c")
+valueBox(rugs_full %>% pull(n_distinct(name)) %>% length(), icon = "fa-users", color = "#435f9c")
 ```
 
 ### Members
 
 ```{r}
-valueBox(rugs_stats %>% pull(members), icon = "fa-user", color = "#0586c4")
+valueBox(rugs_full %>% pull(members) %>% sum(), icon = "fa-user", color = "#0586c4")
 ```
 
 ### Countries
 
 ```{r}
-valueBox(rugs_stats %>% pull(countries), icon = "fa-globe", color = "#435f9c")
+valueBox(rugs_full %>% pull(country) %>% unique() %>% length(), icon = "fa-globe", color = "#435f9c")
 ```
 
 ### Cities
 
 ```{r}
-valueBox(rugs_stats %>% pull(city), icon = "fa-map-marker", color = "#0586c4")
+valueBox(rugs_full %>% pull(city) %>% unique() %>% length(), icon = "fa-map-marker", color = "#0586c4")
 ```
 
 
@@ -172,13 +172,13 @@ Row
 ### Past Events
 
 ```{r}
-valueBox(rugs_stats %>% pull(past_events), icon = "fa-calendar-minus-o", color = "#435f9c")
+valueBox(rugs_full %>% pull(past_events) %>% sum(), icon = "fa-calendar-minus-o", color = "#435f9c")
 ```
 
 ### Upcoming Events
 
 ```{r}
-valueBox(rugs_stats %>% pull(upcoming_events), icon = "fa-calendar-plus-o", color = "#0586c4")
+valueBox(rugs_full %>% pull(upcoming_events) %>% sum(), icon = "fa-calendar-plus-o", color = "#0586c4")
 ```
 
 ### Years
